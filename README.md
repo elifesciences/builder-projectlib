@@ -10,5 +10,9 @@ A library for parsing, expanding and validating the 'projects' file used in the 
 
 ## usage
 
+    python -m projectlib.core <project-file> [project-name]
+    
+for example:
+
     wget https://raw.githubusercontent.com/elifesciences/builder/master/projects/elife.yaml
-    python -m projectlib.core elife.yaml
+    python -m projectlib.core elife.yaml journal | jq

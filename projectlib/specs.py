@@ -1,7 +1,7 @@
 import rfc3986
 import re
 #from functools import partial
-from schema import Schema, And, Or, Optional, Use
+from schema import Schema, And, Or, Optional
 
 # https://stackoverflow.com/questions/25259134/how-can-i-check-whether-a-url-is-valid-using-urlparse
 try:
@@ -36,7 +36,7 @@ def url(x):
     try:
         result = urlparse(x)
         return all([result.scheme, result.netloc, result.path])
-    except Exception as e:
+    except Exception:
         return False
 
 def uri(x):
