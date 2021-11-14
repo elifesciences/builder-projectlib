@@ -10,7 +10,7 @@ A library for parsing, expanding and validating the 'projects' file used in the 
 
 ## usage
 
-    python -m projectlib.core <project-file> [project-name]
+    python -m projectlib.core <project-file> [project-name [alt-config]]
     
 for example:
 

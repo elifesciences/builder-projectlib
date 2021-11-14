@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from .utils import ensure
+from .utils import first
 from functools import wraps
 import copy
 
@@ -10,23 +10,6 @@ def complement(pred):
     def wrapper(*args, **kwargs):
         return not pred(*args, **kwargs)
     return wrapper
-
-def isint(v):
-    return str(v).lstrip('-+').isdigit()
-
-def nth(x, n):
-    "returns the nth value in x or None"
-    ensure(isint(n), "n must be an integer", TypeError)
-    try:
-        return list(x)[n]
-    except (KeyError, IndexError):
-        return None
-    except TypeError:
-        raise
-
-def first(x):
-    "returns the first value in x"
-    return nth(x, 0)
 
 lfilter = lambda func, *iterable: list(filter(func, *iterable))
     
@@ -105,3 +88,17 @@ def parse_project_data(global_defaults, project_data):
 
 def parse_all_project_data(global_defaults, all_project_data):
     return {pname: parse_project_data(global_defaults, project_data) for pname, project_data in all_project_data.items()}
+
+def set_project_alt(pdata, alt_config):
+    """updates the given `pdata` to use the given `alt_config`, if it exists.
+    if multiple environments (aws, gcp, vagrant) have the `alt_config`, they will be updated to.
+    alternate environment configurations (aws-alt, gcp-alt, vagrant-alt) are removed.
+    original `pdata` is not modified."""
+    pdata = copy.deepcopy(pdata)
+    for env in ['vagrant', 'aws', 'gcp']:
+        env_key = env + '-alt' # "aws-alt", "gcp-alt"
+        if env_key in pdata:
+            if alt_config in pdata[env_key]: # "prod", "end2end", "s1804"
+                pdata[env] = pdata[env_key][alt_config]
+            del pdata[env_key]
+    return pdata
